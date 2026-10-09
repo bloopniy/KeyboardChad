@@ -7,8 +7,8 @@
 #include "FileUtil.hpp"
 #include "TextWidget.hpp"
 #include "Config.hpp"
+#include "window_factory.hpp"
 #include <string>
-
 
 void initSettings();
 void setCurrentTimeMs(long& time);
