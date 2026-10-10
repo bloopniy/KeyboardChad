@@ -7,7 +7,7 @@
 
 namespace kbchad {
 	using namespace tui;
-
+	
 	void Typing_Window::reset_input(std::string& sentence) {
 		input_->updateSentence(sentence);
 		context_.errors      = 0;
@@ -32,7 +32,12 @@ namespace kbchad {
 			if (context_.start_time == 0) 
 				context_.start_time = duration_cast<milliseconds>(
        				system_clock::now().time_since_epoch())
-				.count();;
+				.count();
+
+			if (input_->isEnd()) {
+				context_.errors      = input_->getMisses();
+				context_.end_time    = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();;
+			}
 		});
 	}
 

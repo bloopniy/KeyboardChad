@@ -1,7 +1,6 @@
 
 #include "Window.hpp"
 #include "Util.hpp"
-#include "WordList.hpp"
 #include "FileUtil.hpp"
 #include <string>
 #include "window_factory.hpp"
@@ -17,9 +16,6 @@ int main() {
    	if (!fileExists(getHome()->string() +
 	"/.local/share/kbchad/wordlist"))
         initSettings();
-
-	WordList dict = WordList(utils::getHome()->string() +
-	"/.local/share/kbchad/wordlist/english.txt");
 
 	kbchad::Typing_Window tw = kbchad::type_window();	
 
@@ -57,11 +53,5 @@ void initSettings() {
         return;
 	copy(std::filesystem::path("static/english.txt"), 
 		std::filesystem::path(p + "/"));
-}
-
-void setCurrentTimeMs(long& time) {
-    time = std::chrono::duration_cast<std::chrono::milliseconds>(
-       std::chrono::system_clock::now().time_since_epoch() 
-    ).count();
 }
 
