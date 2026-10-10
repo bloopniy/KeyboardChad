@@ -3,6 +3,7 @@
 #include "Input.hpp"
 #include "Window.hpp"
 #include "WinSize.hpp"
+#include "WordList.hpp"
 #include "user_context.hpp"
 
 namespace kbchad {
@@ -12,18 +13,20 @@ namespace kbchad {
 		private:
 			std::shared_ptr<Input> input_;
 			Typing_Session_Context context_;
+			WordList word_list_;
 		public:
 			~Typing_Window() = default;
-			Typing_Window (std::shared_ptr<size::WinSize> size, Typing_Session_Context context, Input input):
-				Window(size), input_(std::make_shared<Input>(input)), context_(context) {}
+			Typing_Window (std::shared_ptr<size::WinSize> size, Typing_Session_Context context, WordList word_list, Input input):
+				Window(size), input_(std::make_shared<Input>(input)), word_list_(word_list), context_(context) {}
 			
-			void reset_input(std::string& sentence);
+			void reset_input(const std::string sentence);
 			std::shared_ptr<Input> input();
 			Typing_Session_Context context();
+			WordList word_list();
 			void press_key(Key key);
 	};
 	
-	Typing_Window type_window();
+	Typing_Window type_window(WordList);
 	tui::Window statistic_window(Typing_Window& tw);
 	tui::Window profile_window(Typing_Session_Context context);
 };

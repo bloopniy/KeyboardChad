@@ -2,13 +2,14 @@
 #include "TextWidget.hpp"
 #include "window_factory.hpp"
 #include "Elements.hpp"
+#include "WordList.hpp"
 #include "word_counter.hpp"
 #include <chrono>
 
 namespace kbchad {
 	using namespace tui;
 	
-	void Typing_Window::reset_input(std::string& sentence) {
+	void Typing_Window::reset_input(const std::string sentence) {
 		input_->updateSentence(sentence);
 		context_.errors      = 0;
 		context_.start_time  = 0l;
@@ -24,6 +25,11 @@ namespace kbchad {
 	Typing_Session_Context Typing_Window::context() {
 		return context_;
 	}
+
+	WordList Typing_Window::word_list() {
+		return word_list_;
+	}
+
 
 	void Typing_Window::press_key(Key key) {
 		using namespace std::chrono;
@@ -41,12 +47,16 @@ namespace kbchad {
 		});
 	}
 
-	Typing_Window type_window() {
+	Typing_Window type_window(WordList dict) {
+
 		Typing_Window w = Typing_Window {
 			std::make_shared<tui::size::FullScreen>(),
 			(Typing_Session_Context){0},
-			Input{ "todo this bullshit" },
+			dict,
+			Input{""},
 		};
+
+		w.reset_input(w.word_list().generateSentence(12));
 
  		w.setContent({
 			text("KeyboardChad") | centerX,
@@ -55,8 +65,7 @@ namespace kbchad {
 		});	
 		
 		w.mapping(Key::ENTER, [&](){
-			std::string s = "the penis of fox is less than";
-			w.reset_input(s);
+			w.reset_input(w.word_list().generateSentence(12));
 		});
 		return w;
 	}
@@ -69,7 +78,8 @@ namespace kbchad {
 
 		// TODO add record notification
 		auto stat_text = std::make_shared<tui::TextWidget>(
-			"WPM: " + std::to_string(wpm) + " ACC: " + std::to_string(acc) + "%"
+			"WPM: " + std::to_string(wpm) + 
+			" ACC: " + std::to_string(acc) + "%(" + std::to_string(tw.context().errors) + ")e"
 		);
 
 		w.setContent({
@@ -79,8 +89,7 @@ namespace kbchad {
 		});
 	
 		w.mapping(Key::ENTER, [&](){
-			std::string s = "the quick brow fox is most sex";
-			tw.reset_input(s);
+			tw.reset_input(tw.word_list().generateSentence(12));
 		});
 
 		return w;

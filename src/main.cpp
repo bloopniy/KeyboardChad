@@ -1,23 +1,29 @@
-
-#include "Window.hpp"
+#include "WordList.hpp"
 #include "Util.hpp"
 #include "FileUtil.hpp"
-#include <string>
 #include "window_factory.hpp"
-
-void initSettings();
-
-void setCurrentTimeMs(long& time);
 
 using namespace tui;
 using namespace utils;
 
+void initSettings() {
+	const std::string p = getHome()->string() + "/.local/share/kbchad/wordlist";
+	std::filesystem::path settingPath(p);
+
+    mkdir(settingPath);
+    if (!fileExists("static/english.txt"))
+        return;
+	copy(std::filesystem::path("static/english.txt"), 
+		std::filesystem::path(p + "/"));
+}
+
 int main() {
-   	if (!fileExists(getHome()->string() +
-	"/.local/share/kbchad/wordlist"))
+   	if (!fileExists(getHome()->string() + "/.local/share/kbchad/wordlist"))
         initSettings();
 
-	kbchad::Typing_Window tw = kbchad::type_window();	
+	WordList list = WordList{utils::getHome()->string() + "/.local/share/kbchad/wordlist/english.txt"};
+
+	kbchad::Typing_Window tw = kbchad::type_window(list);
 
 	util::enableAlterScr();
 	util::hideCursor();
@@ -42,16 +48,3 @@ int main() {
 	util::showCursor();
     return 0;
 }
-
-void initSettings() {
-	const std::string p = utils::getHome()->string() +
-		"/.local/share/kbchad/wordlist";
-	std::filesystem::path settingPath(p);
-
-    utils::mkdir(settingPath);
-    if (!utils::fileExists("static/english.txt"))
-        return;
-	copy(std::filesystem::path("static/english.txt"), 
-		std::filesystem::path(p + "/"));
-}
-
