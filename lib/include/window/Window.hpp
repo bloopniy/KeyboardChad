@@ -21,7 +21,7 @@ private:
 	std::vector<Pixel> content;
 	std::vector<Pixel> oldContent;
 
-	std::unordered_map<Key, std::function<void(Key)>> mappings;	
+	std::unordered_map<Key, std::function<void()>> mappings;	
 
 	int lastWidht  = 0;
 	int lastHeight = 0;
@@ -44,9 +44,9 @@ public:
 	void setContent(std::initializer_list<Element> content);
 	void setContent(Elements& content);
 	
-	void mapping(Key key,const std::function<void(Key)>& callback);
+	void mapping(Key key,const std::function<void()>& callback);
 	void press(Key k);
-	void pressOrDefault(Key k, std::function<void(Key)>);
+	void pressOrDefault(Key k, std::function<void()>);
 
 	void render();
     void renderDiff();

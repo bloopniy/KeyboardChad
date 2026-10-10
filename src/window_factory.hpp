@@ -19,9 +19,11 @@ namespace kbchad {
 			
 			void reset_input(std::string& sentence);
 			std::shared_ptr<Input> input();
+			Typing_Session_Context context();
+			void press_key(Key key);
 	};
 	
-	Typing_Window typeWindow();
-	tui::Window statisticWindow(Typing_Session_Context& context);
-	tui::Window profileWindow(Typing_Session_Context& context);
+	Typing_Window type_window();
+	tui::Window statistic_window(Typing_Window& tw);
+	tui::Window profile_window(Typing_Session_Context context);
 };

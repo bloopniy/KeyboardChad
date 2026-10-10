@@ -9,10 +9,11 @@ namespace tui {
 	}
 
 	void applyStyles(
-			int index,
-			Pixel& pixel,
-			const std::string& hint,
-			const std::string& input) 
+		int index,
+		Pixel& pixel,
+		const std::string& hint,
+		const std::string& input
+	) 
 	{		
 		if (input.size() <= index) return;
 		if (hint[index] == input[index]) pixel.isBold = true;
@@ -73,7 +74,7 @@ namespace tui {
 				break;
 		}	
 	}
-	void Input::updateInput(const std::string& newHint) {
+	void Input::updateSentence(const std::string& newHint) {
 		hint = newHint;
 		cursorPosition = 0;
 		misses = 0;

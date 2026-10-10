@@ -126,21 +126,21 @@ namespace tui {
 		return elements.empty();
 	}
 
-	void Window::mapping(Key k, const std::function<void(Key)>& callback) {
+	void Window::mapping(Key k, const std::function<void()>& callback) {
 		mappings[k] = callback;
 	}
 
 	void Window::press(Key k) {
 		if (!mappings.contains(k)) return;
-		mappings.at(k)(k);
+		mappings.at(k)();
 	}
 
-	void Window::pressOrDefault(Key k,std::function<void(Key)> def) {
+	void Window::pressOrDefault(Key k, std::function<void()> def) {
 		if (!mappings.contains(k)) {
-			def(k); 
+			def(); 
 			return;
 		}
-		mappings.at(k)(k);
+		mappings.at(k)();
 	}
 
     void Window::setContent(Elements& newElems) {

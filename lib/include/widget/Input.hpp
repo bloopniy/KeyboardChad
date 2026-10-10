@@ -1,4 +1,4 @@
-
+#pragma once
 #include <Widget.hpp>
 
 namespace tui {
@@ -24,7 +24,7 @@ public:
 	int getMisses() { return misses; }
 
 	const std::string& getText() const { return input; };
-	void updateInput(const std::string& newHint);
+	void updateSentence(const std::string& newHint);
 	~Input() {}
 };
 }

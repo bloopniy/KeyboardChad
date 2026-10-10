@@ -3,6 +3,7 @@
 #include "window_factory.hpp"
 #include "Elements.hpp"
 #include "word_counter.hpp"
+#include <chrono>
 
 namespace kbchad {
 	using namespace tui;
@@ -20,7 +21,22 @@ namespace kbchad {
 		return input_;
 	}
 
-	Typing_Window typeWindow() {
+	Typing_Session_Context Typing_Window::context() {
+		return context_;
+	}
+
+	void Typing_Window::press_key(Key key) {
+		using namespace std::chrono;
+		pressOrDefault(key, [&](){
+			input_->press(key);
+			if (context_.start_time == 0) 
+				context_.start_time = duration_cast<milliseconds>(
+       				system_clock::now().time_since_epoch())
+				.count();;
+		});
+	}
+
+	Typing_Window type_window() {
 		Typing_Window w = Typing_Window {
 			std::make_shared<tui::size::FullScreen>(),
 			(Typing_Session_Context){0},
@@ -28,20 +44,23 @@ namespace kbchad {
 		};
 
  		w.setContent({
-			text("KeyboardChad"),
+			text("KeyboardChad") | centerX,
 			w.input() | centerX | centerY,
-			text("[esc] exit | [ent] restart")
+			text("[esc] exit | [ent] restart") | buttom | centerX
 		});	
 		
-		w.mapping(Key::ENTER, reset_input);
+		w.mapping(Key::ENTER, [&](){
+			std::string s = "the penis of fox is less than";
+			w.reset_input(s);
+		});
 		return w;
 	}
 
-	tui::Window statisticWindow(Typing_Session_Context& c) {
+	tui::Window statistic_window(Typing_Window& tw) {
 		tui::Window w = tui::Window{std::make_shared<tui::size::FullScreen>()};	
 		
-		const float acc = c.errors > 0 ? 100.0 - (100.0 * c.errors / c.text_size) : 100;
-		const float wpm = (c.words_count * 60000.0 / (c.end_time - c.start_time)) - c.errors;
+		const float acc = tw.context().errors > 0 ? 100.0 - (100.0 * tw.context().errors / tw.context().text_size) : 100;
+		const float wpm = (tw.context().words_count * 60000.0 / (tw.context().end_time - tw.context().start_time)) - tw.context().errors;
 
 		// TODO add record notification
 		auto stat_text = std::make_shared<tui::TextWidget>(
@@ -53,11 +72,16 @@ namespace kbchad {
 			stat_text | centerX | centerY, 
 			text("[esc] exit [entr] restart") | buttom | centerX
 		});
+	
+		w.mapping(Key::ENTER, [&](){
+			std::string s = "the quick brow fox is most sex";
+			tw.reset_input(s);
+		});
 
 		return w;
 	}
 
-	tui::Window profileWindow(Typing_Session_Context& c) {
+	tui::Window profile_window(Typing_Session_Context c) {
 		tui::Window w = tui::Window{std::make_shared<tui::size::FullScreen>()};	
 
 		return w;
